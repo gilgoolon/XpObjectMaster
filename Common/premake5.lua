@@ -1,5 +1,5 @@
-project "XpObjectMaster"
-   kind "ConsoleApp"
+project "Common"
+   kind "StaticLib"
    language "C++"
    cppdialect "C++17"
    targetdir "bin/%{cfg.buildcfg}"
@@ -9,24 +9,11 @@ project "XpObjectMaster"
 
    includedirs
    {
-      "../Walnut/vendor/imgui",
-      "../Walnut/glfw/include",
-
-      "../Walnut/Walnut/src",
-
-      "../Common/src/Include",
-
-      "%{IncludeDir.VulkanSDK}",
-      "%{IncludeDir.glm}",
+      "src",
+      "src/Include",
    }
 
-    links
-    {
-        "Walnut",
-        "Common"
-    }
-
-   targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
+   targetdir ("bin/" .. outputdir .. "/%{prj.name}")
    objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
 
    filter "system:windows"
@@ -45,7 +32,6 @@ project "XpObjectMaster"
       symbols "On"
 
    filter "configurations:Dist"
-      kind "WindowedApp"
       defines { "WL_DIST" }
       runtime "Release"
       optimize "On"

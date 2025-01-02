@@ -8,3 +8,4 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 include "WalnutExternal.lua"
 include "XpObjectMaster"
+include "Common"

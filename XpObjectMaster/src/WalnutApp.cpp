@@ -3,13 +3,16 @@
 
 #include "Walnut/Image.h"
 
-class ExampleLayer : public Walnut::Layer
+#include "Function.hpp"
+
+class ExampleLayer final : public Walnut::Layer
 {
 public:
-	virtual void OnUIRender() override
+	void OnUIRender() override
 	{
 		ImGui::Begin("Hello");
 		ImGui::Button("Button");
+		function();
 		ImGui::End();
 
 		ImGui::ShowDemoWindow();
@@ -18,21 +21,19 @@ public:
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 {
-	Walnut::ApplicationSpecification spec;
+	ApplicationSpecification spec;
 	spec.Name = "Walnut Example";
 
-	Walnut::Application* app = new Walnut::Application(spec);
+	auto app = std::make_unique<Application>(spec);
 	app->PushLayer<ExampleLayer>();
-	app->SetMenubarCallback([app]()
+	app->SetMenubarCallback([&app]
 	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Exit"))
-			{
+		if (ImGui::BeginMenu("File")) {
+			if (ImGui::MenuItem("Exit")) {
 				app->Close();
 			}
 			ImGui::EndMenu();
 		}
 	});
-	return app;
+	return app.release();
 }

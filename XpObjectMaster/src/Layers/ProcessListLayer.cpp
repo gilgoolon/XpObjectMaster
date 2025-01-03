@@ -1,6 +1,7 @@
 ﻿#include "Include/ProcessListLayer.hpp"
 
 #include "imgui.h"
+#include "Trace.hpp"
 
 #include <algorithm>
 #include <functional>
@@ -35,6 +36,25 @@ void ProcessListLayer::OnUIRender()
 	}
 
 	ImGui::End();
+}
+
+void ProcessListLayer::OnUpdate(const float ts)
+{
+	static Time::Duration next_update = Time::INSTANT;
+	const Time::Millis passed_time(static_cast<Time::Rep>(1 / ts));
+	if (passed_time < next_update)
+	{
+		next_update -= passed_time;
+		return;
+	}
+	next_update = UPDATE_COOLDOWN;
+	update();
+}
+
+void ProcessListLayer::update()
+{
+	static uint32_t count = 0;
+	TRACE(L"updating ", count++)
 }
 
 void ProcessListLayer::render_process(const UnopenedProcess& process, const ProcessListColumns& columns)

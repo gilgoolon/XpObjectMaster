@@ -35,10 +35,16 @@ public:
 
 	void OnUIRender() override;
 
+	void OnUpdate(float ts) override;
+
+	void update();
+
 private:
 	static void render_process(const UnopenedProcess& process, const ProcessListColumns& columns);
 	static void render_process_column(const Process& process, ProcessListColumn column);
 
 	std::vector<UnopenedProcess::Ptr> m_processes;
 	ProcessListColumns m_columns;
+
+	static constexpr Time::Duration UPDATE_COOLDOWN = Time::Seconds(1);
 };

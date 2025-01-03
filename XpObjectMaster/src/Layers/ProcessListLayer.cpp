@@ -1,6 +1,8 @@
 ﻿#include "Include/ProcessListLayer.hpp"
 
+#include "Exception.hpp"
 #include "imgui.h"
+#include "ProcessEnumerator.hpp"
 #include "Trace.hpp"
 
 #include <algorithm>
@@ -40,21 +42,44 @@ void ProcessListLayer::OnUIRender()
 
 void ProcessListLayer::OnUpdate(const float ts)
 {
-	static Time::Duration next_update = Time::INSTANT;
-	const Time::Millis passed_time(static_cast<Time::Rep>(1 / ts));
-	if (passed_time < next_update)
+	try
 	{
-		next_update -= passed_time;
-		return;
+		static Time::Duration next_update = Time::INSTANT;
+		const Time::Millis passed_time(static_cast<Time::Rep>(1 / ts));
+		if (passed_time < next_update)
+		{
+			next_update -= passed_time;
+			return;
+		}
+		next_update = UPDATE_COOLDOWN;
+		update();
 	}
-	next_update = UPDATE_COOLDOWN;
-	update();
+	catch (const WinApiException& ex)
+	{
+		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
+	}
+	catch (const WinApiNtException& ex)
+	{
+		TRACE("uncaught WinApiExceptionNt with code ", ex.code(), " and status ", ex.status())
+	}
+	catch (const Exception& ex)
+	{
+		TRACE("uncaught Exception with code ", ex.code())
+	}
+	catch (const std::exception& ex)
+	{
+		TRACE("uncaught std::exception: ", ex.what())
+	}
+	catch (...)
+	{
+		TRACE("uncaught unknown exception: ")
+	}
 }
 
 void ProcessListLayer::update()
 {
-	static uint32_t count = 0;
-	TRACE(L"updating ", count++)
+	TRACE(L"updating process list")
+	m_processes = ProcessEnumerator::get_all();
 }
 
 void ProcessListLayer::render_process(const UnopenedProcess& process, const ProcessListColumns& columns)

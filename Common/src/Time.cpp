@@ -12,7 +12,9 @@ Time::Datetime Time::now()
 
 Time::Datetime Time::to_datetime(const FILETIME& ft)
 {
-	static constexpr auto FILETIME_EPOCH_DIFFERENCE = Seconds(11644473600ULL);
+	static constexpr std::chrono::duration<uint64_t, std::chrono::seconds::period> FILETIME_EPOCH_DIFFERENCE(
+		11644473600ULL
+	);
 	static constexpr uint64_t TICKS_PER_SECOND = 10'000'000;
 	static constexpr uint64_t TICKS_TO_NANOS = 100;
 
@@ -63,5 +65,5 @@ std::string Time::to_string(const Duration& duration)
 		output << seconds.count() << " secs ";
 	}
 	const std::string result = output.str();
-	return result.substr(0, result.size() - 1);
+	return result.size() > 0 ? result.substr(0, result.size() - 1) : result;
 }

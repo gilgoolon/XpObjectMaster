@@ -22,3 +22,14 @@ uint32_t WinApiException::error() const
 {
 	return m_error;
 }
+
+WinApiNtException::WinApiNtException(const ErrorCode code, const NTSTATUS status):
+	Exception(code),
+	m_status(status)
+{
+}
+
+NTSTATUS WinApiNtException::status() const
+{
+	return m_status;
+}

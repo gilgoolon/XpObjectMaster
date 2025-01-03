@@ -1,7 +1,5 @@
 ﻿#include "Include/WinApi.hpp"
 
-#include "Include/Exception.hpp"
-
 static WinApi::WaitStatus result_to_wait_status(const DWORD result)
 {
 	switch (result)

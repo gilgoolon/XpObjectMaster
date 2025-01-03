@@ -6,9 +6,9 @@
 
 namespace Time
 {
-using Rep = uint64_t;
+using Rep = uint32_t;
 using Datetime = std::chrono::system_clock::time_point;
-using Nanos = std::chrono::duration<Rep, std::chrono::nanoseconds::period>;
+using Nanos = std::chrono::duration<uint64_t, std::chrono::nanoseconds::period>;
 using Millis = std::chrono::duration<Rep, std::chrono::milliseconds::period>;
 using Seconds = std::chrono::duration<Rep, std::chrono::seconds::period>;
 using Minutes = std::chrono::duration<Rep, std::chrono::minutes::period>;

@@ -5,6 +5,8 @@
 #include "Time.hpp"
 
 #include <string>
+#include <vector>
+#include <winternl.h>
 
 class Process final
 {
@@ -21,6 +23,8 @@ public:
 private:
 	[[nodiscard]] static HANDLE open_process(uint32_t pid);
 
+	[[nodiscard]] PROCESS_BASIC_INFORMATION query_basic_information() const;
+
 public:
 	[[nodiscard]] uint32_t get_pid() const;
 
@@ -31,6 +35,8 @@ public:
 	[[nodiscard]] Time::Duration get_up_time() const;
 
 	[[nodiscard]] std::string get_command_line() const;
+
+	[[nodiscard]] std::vector<uint8_t> read_memory(const void* address, size_t size) const;
 
 private:
 	ScopedHandle m_handle;

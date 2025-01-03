@@ -3,6 +3,8 @@
 
 #include "ErrorCode.hpp"
 
+#include <Windows.h>
+
 class Exception
 {
 public:
@@ -33,4 +35,20 @@ public:
 
 private:
 	uint32_t m_error;
+};
+
+class WinApiNtException final : public Exception
+{
+public:
+	explicit WinApiNtException(ErrorCode code, NTSTATUS status);
+	~WinApiNtException() override = default;
+	WinApiNtException(const WinApiNtException&) = delete;
+	WinApiNtException& operator=(const WinApiNtException&) = delete;
+	WinApiNtException(WinApiNtException&&) = delete;
+	WinApiNtException& operator=(WinApiNtException&&) = delete;
+
+	[[nodiscard]] NTSTATUS status() const;
+
+private:
+	NTSTATUS m_status;
 };

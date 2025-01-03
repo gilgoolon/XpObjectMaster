@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <cstdint>
+#include <sstream>
 
 enum class ErrorCode : uint32_t
 {
@@ -15,4 +16,8 @@ enum class ErrorCode : uint32_t
 	FAILED_LIBRARY_GET_PROC_ADDRESS,
 	FAILED_LIBRARY_LOAD,
 	FAILED_STRING_CONVERSION,
+	FAILED_ENUMERATE_PROCESSES,
+	OUT_OF_BOUNDS,
 };
+
+std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

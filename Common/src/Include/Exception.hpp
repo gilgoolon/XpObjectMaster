@@ -17,6 +17,8 @@ public:
 
 	[[nodiscard]] ErrorCode code() const;
 
+	[[nodiscard]] bool operator==(ErrorCode error_code) const;
+
 private:
 	ErrorCode m_code;
 };

@@ -17,27 +17,50 @@ ProcessListLayer::ProcessListLayer():
 
 void ProcessListLayer::OnUIRender()
 {
-	ImGui::Begin("Processes");
-
-	if (ImGui::BeginTable(
-		"Processes",
-		static_cast<int>(m_columns.size()),
-		ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg
-	))
+	try
 	{
-		for (const ProcessListColumn column : m_columns)
-		{
-			ImGui::TableSetupColumn(PROCESS_LIST_COLUMN_TO_STRING.at(column).c_str());
-		}
-		ImGui::TableHeadersRow();
-		for (const UnopenedProcess::Ptr& process : m_processes)
-		{
-			render_process(*process, m_columns);
-		}
-		ImGui::EndTable();
-	}
+		ImGui::Begin("Processes");
 
-	ImGui::End();
+		if (ImGui::BeginTable(
+			"Processes",
+			static_cast<int>(m_columns.size()),
+			ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg
+		))
+		{
+			for (const ProcessListColumn column : m_columns)
+			{
+				ImGui::TableSetupColumn(PROCESS_LIST_COLUMN_TO_STRING.at(column).c_str());
+			}
+			ImGui::TableHeadersRow();
+			for (const UnopenedProcess::Ptr& process : m_processes)
+			{
+				render_process(*process, m_columns);
+			}
+			ImGui::EndTable();
+		}
+
+		ImGui::End();
+	}
+	catch (const WinApiException& ex)
+	{
+		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
+	}
+	catch (const WinApiNtException& ex)
+	{
+		TRACE("uncaught WinApiExceptionNt with code ", ex.code(), " and status ", ex.status())
+	}
+	catch (const Exception& ex)
+	{
+		TRACE("uncaught Exception with code ", ex.code())
+	}
+	catch (const std::exception& ex)
+	{
+		TRACE("uncaught std::exception: ", ex.what())
+	}
+	catch (...)
+	{
+		TRACE("uncaught unknown exception: ")
+	}
 }
 
 void ProcessListLayer::OnUpdate(const float ts)

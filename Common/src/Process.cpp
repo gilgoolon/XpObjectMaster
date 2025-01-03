@@ -19,10 +19,10 @@ Process::Process(const uint32_t pid):
 
 HANDLE Process::open_process(const uint32_t pid)
 {
-	static constexpr DWORD ALL_ACCESS = PROCESS_ALL_ACCESS;
+	static constexpr DWORD ALL_ACCESS = PROCESS_QUERY_INFORMATION | PROCESS_VM_READ;
 	static constexpr BOOL DONT_INHERIT_HANDLE = FALSE;
 	const HANDLE result = OpenProcess(ALL_ACCESS, DONT_INHERIT_HANDLE, pid);
-	if (result == INVALID_HANDLE_VALUE)
+	if (result == nullptr)
 	{
 		throw WinApiException(ErrorCode::FAILED_PROCESS_OPEN);
 	}
